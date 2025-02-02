@@ -10,39 +10,50 @@ import 'package:todo/todoItem.dart';
 // List<String> todo = ["Study Lessons", "Run SK", "Got to party"];
 // List<String> todoCompleted = ["Game meetup", "Take out tash"];
 
-List<Task> todo = [
-  Task(
-      type: TaskType.note,
-      title: "Study Lessons",
-      description: "Study Comp117",
-      isCompleted: false),
-  Task(
-      type: TaskType.contest,
-      title: "Run SK",
-      description: "Run 5 kilometers",
-      isCompleted: false),
-  Task(
-      type: TaskType.calender,
-      title: "Go to party",
-      description: "Atent to party",
-      isCompleted: false),
-];
-
-List<Task> completed = [
-  Task(
-      type: TaskType.contest,
-      title: "Run SK",
-      description: "Run 5 kilometers",
-      isCompleted: false),
-  Task(
-      type: TaskType.calender,
-      title: "Go to party",
-      description: "Atent to party",
-      isCompleted: false),
-];
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Task> todo = [
+    Task(
+        type: TaskType.note,
+        title: "Study Lessons",
+        description: "Study Comp117",
+        isCompleted: false),
+    Task(
+        type: TaskType.contest,
+        title: "Run SK",
+        description: "Run 5 kilometers",
+        isCompleted: false),
+    Task(
+        type: TaskType.calender,
+        title: "Go to party",
+        description: "Atent to party",
+        isCompleted: false),
+  ];
+
+  List<Task> completed = [
+    Task(
+        type: TaskType.contest,
+        title: "Run SK",
+        description: "Run 5 kilometers",
+        isCompleted: false),
+    Task(
+        type: TaskType.calender,
+        title: "Go to party",
+        description: "Atent to party",
+        isCompleted: false),
+  ];
+
+  void addNewTask(Task newTask) {
+    setState(() {
+      todo.add(newTask);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +110,9 @@ class HomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => AddNewTask()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddNewTask(
+                          addNewTask: (newTask) => addNewTask(newTask))));
                 },
                 child: Text("Add New Task"))
           ]),

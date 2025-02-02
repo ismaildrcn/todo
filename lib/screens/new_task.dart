@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:todo/constants/colors.dart';
+import 'package:todo/constants/task_type.dart';
+import 'package:todo/model/task.dart';
 
-class AddNewTask extends StatelessWidget {
-  const AddNewTask({super.key});
+class AddNewTask extends StatefulWidget {
+  const AddNewTask({super.key, required this.addNewTask});
+
+  final void Function(Task newTask) addNewTask;
+
+  @override
+  State<AddNewTask> createState() => _AddNewTaskState();
+}
+
+class _AddNewTaskState extends State<AddNewTask> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TaskType taskType = TaskType.note;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +70,7 @@ class AddNewTask extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
+                    controller: titleController,
                     decoration:
                         InputDecoration(filled: true, fillColor: Colors.white)),
               ),
@@ -69,6 +85,9 @@ class AddNewTask extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: Duration(milliseconds: 450),
                             content: Text("Category Selected")));
+                        setState(() {
+                          taskType = TaskType.note;
+                        });
                       },
                       child: Image.asset("lib/assets/images/category_1.png"),
                     ),
@@ -77,6 +96,9 @@ class AddNewTask extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: Duration(milliseconds: 450),
                             content: Text("Category Selected")));
+                        setState(() {
+                          taskType = TaskType.calender;
+                        });
                       },
                       child: Image.asset("lib/assets/images/category_2.png"),
                     ),
@@ -85,6 +107,9 @@ class AddNewTask extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             duration: Duration(milliseconds: 450),
                             content: Text("Category Selected")));
+                        setState(() {
+                          taskType = TaskType.contest;
+                        });
                       },
                       child: Image.asset("lib/assets/images/category_3.png"),
                     )
@@ -102,6 +127,7 @@ class AddNewTask extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextField(
+                              controller: dateController,
                               decoration: InputDecoration(
                                   filled: true, fillColor: Colors.white),
                             ),
@@ -116,6 +142,7 @@ class AddNewTask extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextField(
+                              controller: timeController,
                               decoration: InputDecoration(
                                   filled: true, fillColor: Colors.white),
                             ),
@@ -128,18 +155,29 @@ class AddNewTask extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: Text("Notes"),
+                child: Text("Description"),
               ),
               SizedBox(
                 height: 300,
                 child: TextField(
+                  controller: descriptionController,
                   expands: true,
                   maxLines: null,
                   decoration: InputDecoration(
                       filled: true, fillColor: Colors.white, isDense: true),
                 ),
               ),
-              ElevatedButton(onPressed: () {}, child: Text("Save"))
+              ElevatedButton(
+                  onPressed: () {
+                    Task newTask = Task(
+                        type: taskType,
+                        title: titleController.text,
+                        description: descriptionController.text,
+                        isCompleted: false);
+                    widget.addNewTask(newTask);
+                    Navigator.pop(context);
+                  },
+                  child: Text("Save"))
             ],
           ),
         ),
